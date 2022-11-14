@@ -147,6 +147,6 @@ Interval=setInterval(()=>{
 	snake.update();
 	snake.draw();
 	food.draw();
-        snake.gameover();
+        //snake.gameover();
         
 }, 120);
