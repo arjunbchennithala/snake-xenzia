@@ -52,10 +52,6 @@ class Snake {
 			if(i<this.head) {
 				this.body[i].x = this.body[i+1].x;
 				this.body[i].y = this.body[i+1].y;
-                                if(((this.body[i].x-1) == this.body[this.head].x) && ((this.body[i].y-1) == this.body[this.head].y))
-                        {this.gameover();
-                         
-                         }
 			} 
 		}
 		ctx.fill();
@@ -66,14 +62,20 @@ class Snake {
 		this.head++;
 		scorewindow.innerHTML = (this.head-3)*10;
 	}
-        display()
-               {
-                displayx.innerHTML = this.body[this.head].x;
-                displayy.innerHTML = this.body[this.head].y;
+        display(x,y) {
+                   displayx.innerHTML = x;
+                   displayy.innerHTML = y;
         }
         gameover() {
+                    for(let j=0;j<this.head;j++)
+                    {
+                     let part=this.body[j];
+                     this.display(part.x,part.y);
+                     if((part.x===this.body[this.head].x)&&(part.y===this.body[this.head].y))
+                     {
                     clearInterval(Interval);
                     game.innerHTML ="GAME OVER";
+                     }}
         }
 }
 
@@ -103,6 +105,7 @@ document.addEventListener("keydown", (event) => {
 	switch(event.key) {
 		case 'a':
 		case 'A':
+                case 'ArrowLeft':
                         if((snake.xspeed == 1)&&(snake.yspeed == 0))
                         {
                          break;}
@@ -111,6 +114,7 @@ document.addEventListener("keydown", (event) => {
 			break;
 		case 'd':
 		case 'D':
+                case 'ArrowRight':
                         if((snake.xspeed == -1)&&(snake.yspeed == 0))
                         {
                          break;}
@@ -119,6 +123,7 @@ document.addEventListener("keydown", (event) => {
 			break;
 		case 'w':
 		case 'W':
+                case 'ArrowUp':
                         if((snake.xspeed == 0)&&(snake.yspeed == 1))
                         {
                          break;}
@@ -127,7 +132,8 @@ document.addEventListener("keydown", (event) => {
 			break;
 		case 's':
 		case 'S':
-                        if((snake.xpeed == 0)&&(snake.yspeed == -1))
+                case 'ArrowDown':
+                        if((snake.xspeed == 0)&&(snake.yspeed == -1))
                         {
                          break;}
 			snake.xspeed = 0;
@@ -141,5 +147,6 @@ Interval=setInterval(()=>{
 	snake.update();
 	snake.draw();
 	food.draw();
-        snake.display();
+        snake.gameover();
+        
 }, 120);
