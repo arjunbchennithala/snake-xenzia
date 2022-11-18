@@ -48,7 +48,7 @@ class Snake {
 		ctx.fillStyle = "green";
 		ctx.beginPath();
 		for(var i=0; i<this.head; i++) {
-			ctx.rect((this.body[i].x << 8) + (this.body[i].x << 1), (this.body[i].y << 8) + (this.body[i].y << 1), scale, scale); //Value of scale is used in bitshifting
+			ctx.rect((this.body[i].x << 3) + (this.body[i].x << 1), (this.body[i].y << 3) + (this.body[i].y << 1), scale, scale); //Value of scale is used in bitshifting
 			if(i<this.head) {
 				this.body[i].x = this.body[i+1].x;
 				this.body[i].y = this.body[i+1].y;
@@ -89,7 +89,7 @@ class Food {
 	draw() {
 		ctx.beginPath();
                 ctx.fillStyle = "blue";
-		ctx.fillRect((this.x << 8) + (this.x << 1), (this.y << 8) + (this.y << 1), scale, scale); //Value of scale is used for bitshifting
+		ctx.fillRect((this.x << 3) + (this.x << 1), (this.y << 3) + (this.y << 1), scale, scale); //Value of scale is used for bitshifting
 	}	
 }
 
