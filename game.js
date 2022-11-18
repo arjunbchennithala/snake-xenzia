@@ -1,16 +1,15 @@
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext('2d');
 var scorewindow = document.getElementById("score");
-var displayx = document.getElementById("dispx");
-var displayy = document.getElementById("dispy");
 var game = document.getElementById("over");
+var over = false;
 const scale = 10;
 const width = canvas.width;
 const height = canvas.height;
 const rows = height/scale;
 const columns = width/scale; 
 
-class V2 {
+class Snakeparts {
 	constructor(x, y) {
 		this.x = x;
 		this.y = y;
@@ -19,10 +18,11 @@ class V2 {
 
 class Snake {
 	constructor(x, y) {
-		this.body = [new V2(x, y)];
+		this.body = [new Snakeparts(x, y)];
 		this.head = 0;
 		this.xspeed = 0;
 		this.yspeed = 0;
+                
 	}
 
 	update() {
@@ -47,34 +47,34 @@ class Snake {
 	draw() {
 		ctx.fillStyle = "green";
 		ctx.beginPath();
-		for(var i=0; i<=this.head; i++) {
-			ctx.rect(this.body[i].x*scale, this.body[i].y*scale, scale, scale);
+		for(var i=0; i<this.head; i++) {
+			ctx.fillRect(this.body[i].x*scale, this.body[i].y*scale, scale, scale);
 			if(i<this.head) {
 				this.body[i].x = this.body[i+1].x;
 				this.body[i].y = this.body[i+1].y;
 			} 
 		}
-		ctx.fill();
 	}
 
 	grow() {
-		this.body.push(new V2(this.body[this.head].x + this.xspeed , this.body[this.head].y + this.yspeed));
+		this.body.push(new Snakeparts(this.body[this.head].x + this.xspeed, this.body[this.head].y + this.yspeed));
 		this.head++;
 		scorewindow.innerHTML = (this.head-3)*10;
+                
 	}
-        display(x,y) {
-                   displayx.innerHTML = x;
-                   displayy.innerHTML = y;
-        }
-        gameover() {
-                    for(let j=0;j<this.head;j++)
+    gameover() {
+                for(let j=0;j<(this.head-3);j++)
                     {
                      let part=this.body[j];
-                     this.display(part.x,part.y);
-                     if((part.x===this.body[this.head].x)&&(part.y===this.body[this.head].y))
+                     let head=this.body[this.head];
+                     if((part.x===head.x)&&(part.y===head.y))
                      {
                     clearInterval(Interval);
+					over=true;
                     game.innerHTML ="GAME OVER";
+					ctx.fillStyle="white";
+                    ctx.font="40px verdana";
+                    ctx.fillText("Press Enter", width/4.5, height/2);
                      }}
         }
 }
@@ -86,9 +86,8 @@ class Food {
 	}
 	draw() {
 		ctx.beginPath();
-		ctx.rect(this.x * scale, this.y * scale, scale, scale);
-		ctx.fillStyle = "blue";
-		ctx.fill();
+                ctx.fillStyle = "blue";
+		ctx.fillRect(this.x * scale, this.y * scale, scale, scale);
 	}	
 }
 
@@ -139,6 +138,15 @@ document.addEventListener("keydown", (event) => {
 			snake.xspeed = 0;
 			snake.yspeed = 1;
 			break;
+		case 'Enter'://Restart the game
+			if(over==true)
+			{
+				game.innerHTML ="";
+				scorewindow.innerHTML =0;
+				document.location.reload();
+				break;
+			}
+			break;
 	}
 });
 
@@ -147,6 +155,6 @@ Interval=setInterval(()=>{
 	snake.update();
 	snake.draw();
 	food.draw();
-        //snake.gameover();
+    snake.gameover();
         
 }, 120);
